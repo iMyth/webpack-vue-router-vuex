@@ -51,9 +51,6 @@ const devWebpackConfig = merge(baseWebpackConfig, {
       template: 'index.html',
       inject: true
     }),
-    new CopyWebpackPlugin([
-      { from: 'src/sw.js', to: 'sw.js' }
-    ]),
     new SpritesmithPlugin({
       src: {
         cwd: path.resolve(__dirname, '../src/assets/images'),
