@@ -10,6 +10,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 const SpritesmithPlugin = require('webpack-spritesmith')
+const SWPrecachePlugin = require('sw-precache-webpack-plugin')
+const PrerenderSpaPlugin = require('prerender-spa-plugin')
 
 const env = process.env.NODE_ENV === 'testing'
   ? require('../config/test.env')
@@ -81,9 +83,6 @@ const webpackConfig = merge(baseWebpackConfig, {
     new webpack.HashedModuleIdsPlugin(),
     // enable scope hoisting
     new webpack.optimize.ModuleConcatenationPlugin(),
-    new CopyWebpackPlugin([
-      { from: 'src/sw.js', to: 'sw.js' }
-    ]),
     // split vendor js into its own file
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
@@ -141,7 +140,34 @@ const webpackConfig = merge(baseWebpackConfig, {
       customTemplates: {
         'function_based_template': utils.templateFunction
       }
-    })
+    }),
+    // auto generate service worker
+    new SWPrecachePlugin({
+      cacheId: 'vue-website',
+      filename: 'service-worker.js',
+      minify: true,
+      dontCacheBustUrlsMatching: /./,
+      staticFileGlobsIgnorePatterns: [/\.map$/, /\.json$/],
+      runtimeCaching: [
+        {
+          urlPattern: '/',
+          handler: 'networkFirst'
+        },
+        {
+          urlPattern: /\/index/,
+          handler: 'networkFirst'
+        }
+      ]
+    }),
+    new PrerenderSpaPlugin(
+      // Absolute path to compiled SPA
+      path.resolve(__dirname, '../dist'),
+      // List of routes to prerender
+      [ '/' ],
+      {
+        // options
+      }
+    )
   ]
 })
 
