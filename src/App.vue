@@ -11,7 +11,7 @@ window.app = {}
 
 export default {
   name: 'app',
-  components: { TitleBar, List },
+  components: { TitleBar },
   mounted () {
     console.log('all systems go')
   }
@@ -29,8 +29,6 @@ export default {
   text-align: center;
   color: #2c3e50;
   height: 100%;
-  padding: 0 20px;
-  transition: height .4s ease;
   overflow: hidden;
 }
 </style>

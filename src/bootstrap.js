@@ -13,7 +13,7 @@ document.onselectstart = function (e) {
     if (filterSelect[element.tagName]) {
       return true
     }
-    if (element.parentElement.webkitMatchesSelector('[selectable]')) {
+    if (element.parentElement && element.parentElement.webkitMatchesSelector('[selectable]')) {
       return true
     }
   }
